@@ -1,0 +1,27 @@
+/* Custom styles for Okini Café */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for active reservations */
+#reservations-list::-webkit-scrollbar {
+    width: 6px;
+}
+#reservations-list::-webkit-scrollbar-track {
+    background: #f2e8e5;
+    border-radius: 8px;
+}
+#reservations-list::-webkit-scrollbar-thumb {
+    background: #8c6d62;
+    border-radius: 8px;
+}
+#reservations-list::-webkit-scrollbar-thumb:hover {
+    background: #6f5247;
+}
+
+/* Coffee card selection styling */
+.coffee-card-radio:checked + .coffee-card-label {
+    border-color: #543d34;
+    background-color: #f9f5f3;
+    box-shadow: 0 4px 6px -1px rgba(84, 61, 52, 0.1);
+}

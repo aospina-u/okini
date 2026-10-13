@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Okini Café - Reserva tu Café Diario</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        coffee: {
+                            50: '#fdf8f6',
+                            100: '#f2e8e5',
+                            200: '#e3d2cc',
+                            600: '#8c6d62',
+                            700: '#6f5247',
+                            800: '#543d34',
+                            900: '#3d2b24',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-coffee-50 text-coffee-900 font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="bg-coffee-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-coffee-700 p-2 rounded-full text-white">
+                    <i class="fa-solid fa-mug-hot text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-wide">Okini Café</h1>
+                    <p class="text-xs text-coffee-200">Tu dosis diaria de energía</p>
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-6 text-sm font-medium">
+                <a href="#reservar" class="hover:text-coffee-200 transition">Reservar</a>
+                <a href="#historial" class="hover:text-coffee-200 transition">Mis Reservas</a>
+                <a href="#info" class="hover:text-coffee-200 transition">Acerca de</a>
+            </nav>
+            <div class="flex items-center space-x-3">
+                <span id="user-badge" class="bg-coffee-800 text-coffee-200 text-xs px-3 py-1 rounded-full border border-coffee-700">
+                    <i class="fa-solid fa-user mr-1"></i> Local Mode
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left / Form Section (2 columns) -->
+        <div class="lg:col-span-2 space-y-8">
+            
+            <!-- Hero / Welcome Banner -->
+            <div class="bg-gradient-to-r from-coffee-800 to-coffee-700 text-white p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10 text-9xl">
+                    <i class="fa-solid fa-coffee"></i>
+                </div>
+                <h2 class="text-2xl md:text-3xl font-bold mb-2">Reserva tus 2 tazas de café diarias</h2>
+                <p class="text-coffee-100 text-sm md:text-base mb-4">
+                    Disfruta de tu café favorito recién preparado en el local. Tienes hasta 2 tazas disponibles por día. ¡Selecciona tu bebida y asegúrate el mejor aroma!
+                </p>
+                <div class="flex items-center space-x-4 text-xs bg-coffee-900/40 p-3 rounded-xl backdrop-blur-sm inline-flex">
+                    <div><i class="fa-solid fa-circle-check text-green-400 mr-1"></i> Límite diario: <span id="daily-limit-text" class="font-bold">0 / 2 tazas</span></div>
+                    <div class="border-l border-coffee-600 pl-4"><i class="fa-solid fa-store text-amber-300 mr-1"></i> Servido en el local</div>
+                </div>
+            </div>
+
+            <!-- Reservation Card -->
+            <section id="reservar" class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-coffee-200">
+                <h3 class="text-xl font-bold text-coffee-900 mb-6 flex items-center">
+                    <i class="fa-solid fa-calendar-plus text-coffee-700 mr-2"></i> Nueva Reserva / Compra
+                </h3>
+
+                <form id="reservation-form" class="space-y-6">
+                    
+                    <!-- Date Selection -->
+                    <div>
+                        <label for="reservation-date" class="block text-sm font-semibold text-coffee-800 mb-2">Fecha de Reserva</label>
+                        <input type="date" id="reservation-date" required
+                            class="w-full px-4 py-3 rounded-xl border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600 focus:border-transparent text-sm bg-coffee-50/50">
+                        <p id="date-status" class="text-xs text-coffee-600 mt-1"></p>
+                    </div>
+
+                    <!-- Coffee Type Selection -->
+                    <div>
+                        <label class="block text-sm font-semibold text-coffee-800 mb-3">Elige tu Café (Hasta 2 por día)</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="coffee-options-container">
+                            <!-- Options will be populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Custom Notes / Preferences -->
+                    <div>
+                        <label for="reservation-notes" class="block text-sm font-semibold text-coffee-800 mb-2">Notas u Observaciones (Opcional)</label>
+                        <input type="text" id="reservation-notes" placeholder="Ej. Con leche de almendras, poco azúcar..."
+                            class="w-full px-4 py-3 rounded-xl border border-coffee-200 focus:outline-none focus:ring-2 focus:ring-coffee-600 text-sm">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" id="submit-btn"
+                        class="w-full bg-coffee-800 hover:bg-coffee-900 text-white font-semibold py-3.5 px-6 rounded-xl transition duration-200 shadow-md flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-mug-hot"></i>
+                        <span>Confirmar Reserva en Local</span>
+                    </button>
+                </form>
+            </section>
+        </div>
+
+        <!-- Right / Sidebar Section (1 column) -->
+        <div class="space-y-8">
+            
+            <!-- Summary / Status Today -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-coffee-200">
+                <h3 class="text-lg font-bold text-coffee-900 mb-4 flex items-center">
+                    <i class="fa-solid fa-chart-pie text-coffee-700 mr-2"></i> Resumen de Hoy
+                </h3>
+                <div class="bg-coffee-50 p-4 rounded-xl space-y-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-coffee-700">Fecha seleccionada:</span>
+                        <span id="summary-date" class="font-bold text-coffee-900">-</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-coffee-700">Tazas reservadas hoy:</span>
+                        <span id="summary-count" class="font-bold text-coffee-900">0 / 2</span>
+                    </div>
+                    <div class="w-full bg-coffee-200 rounded-full h-2.5 overflow-hidden">
+                        <div id="summary-progress" class="bg-coffee-700 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div id="limit-warning" class="mt-4 hidden p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-xl flex items-start space-x-2">
+                    <i class="fa-solid fa-triangle-exclamation mt-0.5"></i>
+                    <span>Has alcanzado el límite de 2 tazas para esta fecha. ¡Te esperamos en el local!</span>
+                </div>
+            </div>
+
+            <!-- Active Reservations / History -->
+            <section id="historial" class="bg-white p-6 rounded-2xl shadow-sm border border-coffee-200">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-coffee-900 flex items-center">
+                        <i class="fa-solid fa-clock-rotate-left text-coffee-700 mr-2"></i> Tus Reservas
+                    </h3>
+                    <button id="clear-history" class="text-xs text-red-600 hover:text-red-800 font-medium">Limpiar</button>
+                </div>
+                <div id="reservations-list" class="space-y-3 max-h-96 overflow-y-auto pr-1">
+                    <!-- Populated via JS -->
+                    <div class="text-center py-8 text-coffee-600 text-sm">
+                        <i class="fa-solid fa-mug-saucer text-2xl mb-2 block opacity-40"></i>
+                        No tienes reservas registradas aún.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Server Connection Notice -->
+            <div class="bg-coffee-100 border border-coffee-200 p-4 rounded-2xl text-xs text-coffee-800 space-y-2">
+                <div class="font-bold flex items-center">
+                    <i class="fa-solid fa-server mr-1.5 text-coffee-700"></i> Arquitectura Híbrida (Local/Servidor)
+                </div>
+                <p>
+                    Actualmente operando con <code>localStorage</code>. El proyecto está preparado en <code>js/api.js</code> para conectarse fácilmente a una API REST remota modificando un solo parámetro.
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-coffee-900 text-coffee-200 py-6 mt-12 text-center text-xs">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+            <p>&copy; 2026 Okini Café. Todos los derechos reservados.</p>
+            <p class="flex items-center"><i class="fa-solid fa-store mr-1 text-amber-300"></i> Servicio exclusivo para consumo en el local</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2"></div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
